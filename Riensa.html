@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Envío de Documentos</title>
+    <link rel="icon" href="img/Riensa.jpg" type="image/x-icon"> <!-- Ruta al archivo de tu favicon -->
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background: url('img/Riensa.jpg') no-repeat center center fixed;
+            background-size: cover;
+            position: relative;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        body::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(255, 255, 255, 0.25);
+            backdrop-filter: blur(10px);
+            z-index: -1;
+            animation: fadeIn 1.5s ease-out forwards;
+        }
+
+        .container {
+            background-color: rgba(255, 255, 255, 0.95);
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+            padding: 30px;
+            width: 400px;
+            text-align: center;
+            position: relative;
+            z-index: 1;
+            animation: slideUp 1s ease-out;
+            transition: transform 0.4s ease, box-shadow 0.4s ease;
+        }
+
+        .container:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.5);
+        }
+
+        .header {
+            width: 100%;
+            height: 150px;  /* Ajusta la altura */
+            background: url('img/Riensa.jpg') no-repeat center center;
+            background-size: contain; /* Ajusta la imagen sin recortes */
+            background-position: center;
+            border-radius: 12px;
+            margin-bottom: 15px;
+        }
+
+        h1 {
+            color: #00296b;
+            margin-bottom: 20px;
+            font-size: 2em;
+            border-bottom: 3px solid #ffc107;
+            display: inline-block;
+            padding-bottom: 12px;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            animation: fadeInText 1.5s ease-out forwards;
+        }
+
+        input[type="file"],
+        input[type="email"] {
+            background-color: #f0f8ff;
+            border: 1px solid #00296b;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 20px;
+            font-size: 1.1em;
+            color: #00296b;
+            width: 100%;
+            transition: box-shadow 0.4s ease, transform 0.3s ease;
+        }
+
+        input[type="file"] {
+            padding: 10px;
+        }
+
+        input[type="file"]:focus,
+        input[type="email"]:focus {
+            outline: none;
+            box-shadow: 0 0 10px rgba(0, 41, 107, 0.4);
+            transform: translateY(-3px);
+        }
+
+        input[type="email"]::placeholder {
+            color: #5c7299;
+        }
+
+        button {
+            background-color: #00296b;
+            color: #ffffff;
+            border: none;
+            border-radius: 6px;
+            padding: 12px;
+            font-size: 1.2em;
+            cursor: pointer;
+            transition: all 0.4s ease;
+            width: 100%;
+            margin-bottom: 20px;
+        }
+
+        button:hover {
+            background-color: #ffc107;
+            color: #00296b;
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0, 41, 107, 0.4);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        #status {
+            margin-top: 20px;
+            color: #00296b;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            animation: fadeInText 2s ease-out forwards;
+        }
+
+        #fileList {
+            list-style-type: none;
+            margin-bottom: 20px;
+            text-align: left;
+            opacity: 0;
+            animation: fadeInText 1s ease-out forwards;
+        }
+
+        @keyframes fadeIn {
+            0% {
+                opacity: 0;
+            }
+            100% {
+                opacity: 1;
+            }
+        }
+
+        @keyframes fadeInText {
+            0% {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideUp {
+            0% {
+                opacity: 0;
+                transform: translateY(50px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Aquí está la imagen de fondo que reemplaza el texto -->
+        <div class="header"></div> <!-- Solo la imagen de fondo, sin texto visible -->
+        
+        <div id="documentForm">
+            <!-- Adjuntar archivos -->
+            <div>
+                <input type="file" id="fileInput" multiple>
+                <ul id="fileList"></ul>
+                <button type="button" onclick="clearFiles()">Limpiar Archivos</button>
+            </div> 
+            
+            <!-- Ingresar correo electrónico -->
+            <div>
+                <input type="email" id="emailInput" placeholder="Ingresa el correo" required>
+            </div>
+
+            <!-- Ingresar contraseña -->
+            <div>
+                <input type="password" id="passwordInput" placeholder="Ingresa la contraseña" required>
+            </div>
+
+            <!-- Botón de envío -->
+            <div>
+                <button type="button" id="sendEmail">Enviar Correo</button>
+            </div>
+        </div>
+
+        <!-- Estado del envío -->
+        <p id="status"></p>
+    </div>
+
+    <script>
+        // Manejar la selección de archivos
+        const fileInput = document.getElementById('fileInput');
+        const fileList = document.getElementById('fileList');
+
+        fileInput.addEventListener('change', updateFileList);
+
+        // Actualizar la lista de archivos seleccionados
+        function updateFileList() {
+            fileList.innerHTML = "";  // Limpiar la lista de archivos previamente mostrada
+            const files = fileInput.files;
+            for (let i = 0; i < files.length; i++) {
+                const li = document.createElement("li");
+                li.textContent = files[i].name;
+                fileList.appendChild(li);
+            }
+        }
+
+        // Función para limpiar los archivos seleccionados y la lista visual
+        function clearFiles() {
+            fileInput.value = '';  // Limpiar el input de archivos
+            fileList.innerHTML = '';  // Limpiar la lista visual de archivos
+        }
+
+        // Función para enviar el correo electrónico con archivos adjuntos y protección por contraseña
+        document.getElementById('sendEmail').addEventListener('click', async function () {
+            const toEmail = document.getElementById('emailInput').value;
+            const password = document.getElementById('passwordInput').value;
+            const files = fileInput.files;
+            const status = document.getElementById('status');
+
+            if (!toEmail || files.length === 0 || !password) {
+                status.innerText = 'Por favor, completa todos los campos antes de enviar.';
+                return;
+            }
+
+            // Crear un objeto FormData para enviar los archivos y el correo como multipart/form-data
+            const formData = new FormData();
+            formData.append('to', toEmail);
+            formData.append('subject', 'Documentos Adjuntos Protegidos'); 
+            formData.append('text', 'Aquí están los documentos que solicitaste.');
+            formData.append('password', password);
+
+            // Agregar todos los archivos seleccionados al FormData
+            Array.from(files).forEach(file => {
+                formData.append('files', file);  
+            });
+
+            try {
+                const response = await fetch('http://localhost:3000/send-email', {
+                    method: 'POST',
+                    body: formData  
+                });
+
+                if (response.ok) {
+                    status.innerText = 'Correo enviado exitosamente.';
+                    clearFiles();  // Limpiar archivos después de enviar
+                } else {
+                    status.innerText = 'Error al enviar el correo.';
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                status.innerText = 'Error al conectar con el servidor.';
+            }
+        });
+    </script>
+</body>
+</html>

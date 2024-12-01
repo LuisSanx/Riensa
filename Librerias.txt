@@ -1,0 +1,82 @@
+### Librerías Usadas en el Código y Comandos de Instalación
+
+Las librerías utilizadas en el código son:
+
+1. **express**: framework para configurar el servidor web.
+2. **nodemailer**: para enviar correos electrónicos.
+3. **body-parser**: para manejar el cuerpo de las solicitudes.
+4. **cors**: para habilitar CORS.
+5. **multer**: para la subida de archivos.
+6. **path**: para la manipulación de rutas.
+7. **fs**: para manejar el sistema de archivos.
+8. **qrcode**: para generar códigos QR.
+9. **node-7z**: para crear archivos comprimidos protegidos con contraseña.
+10. **jsonwebtoken**: para crear y verificar tokens JWT.
+
+Para instalarlas, primero asegúrate de que estás en la carpeta de tu proyecto, luego ejecuta este comando en la terminal:
+
+```bash
+npm install express nodemailer body-parser cors multer qrcode node-7z jsonwebtoken
+```
+
+### Instalación de Node.js
+
+1. **Descargar Node.js**:
+   Ve al [sitio oficial de Node.js](https://nodejs.org/) y descarga la versión LTS (recomendada para la mayoría de los usuarios) correspondiente a tu sistema operativo.
+
+2. **Instalar Node.js**:
+   Ejecuta el archivo descargado y sigue las instrucciones de instalación.
+
+3. **Verificar la Instalación**:
+   Una vez instalado, abre una terminal y ejecuta estos comandos para asegurarte de que todo está funcionando correctamente:
+   ```bash
+   node -v
+   npm -v
+   ```
+   Esto debería mostrar las versiones instaladas de `node` y `npm`.
+
+### Instalación y Configuración de PM2
+
+`pm2` es una herramienta popular que permite mantener aplicaciones de Node.js activas de forma continua, incluso si el servidor se reinicia o encuentra algún error.
+
+1. **Instalar PM2**:
+   Para instalar `pm2` globalmente en tu sistema, usa el siguiente comando:
+   ```bash
+   npm install -g pm2
+   ```
+
+2. **Iniciar el Servidor con PM2**:
+   Una vez instalado, puedes iniciar tu servidor de Node.js usando `pm2` de la siguiente manera:
+   ```bash
+   pm2 start nombreArchivo.js
+   ```
+   Reemplaza `nombreArchivo.js` con el nombre de tu archivo del servidor, en este caso, `app.js` o el nombre correspondiente.
+
+3. **Configurar PM2 para Iniciar Automáticamente**:
+   Para asegurarte de que `pm2` reinicie el servidor automáticamente después de un reinicio del sistema, ejecuta:
+   ```bash
+   pm2 startup
+   ```
+   Esto generará un comando que debes ejecutar para configurar `pm2` en el inicio de tu sistema. Sigue las instrucciones de la salida del comando.
+
+4. **Guardar la Configuración**:
+   Para que `pm2` recuerde qué aplicaciones deben iniciarse automáticamente, ejecuta:
+   ```bash
+   pm2 save
+   ```
+
+5. **Verificar el Estado del Servidor**:
+   Puedes verificar el estado de tus aplicaciones en ejecución usando:
+   ```bash
+   pm2 list
+   ```
+
+6. **Reiniciar o Detener el Servidor**:
+   Para reiniciar el servidor, usa:
+   ```bash
+   pm2 restart nombreArchivo.js
+   ```
+   Para detenerlo, usa:
+   ```bash
+   pm2 stop nombreArchivo.js
+   ```
